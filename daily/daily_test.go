@@ -7,7 +7,7 @@ import (
 	"testing/fstest"
 )
 
-func TestDaily(t *testing.T) {
+func TestFetchSpecifiedDailies(t *testing.T) {
 	dailies := daily.Daily{}
 	vfs := fstest.MapFS{
 		"2024-01-01.md": {Data: []byte("test")},
