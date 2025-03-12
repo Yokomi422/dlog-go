@@ -9,7 +9,6 @@ import (
 
 type Daily struct {
 	Path string
-	Data []byte
 }
 
 // FetchSpecifiedDailies retrieves Daily slices from the given fileSystem.
@@ -50,11 +49,11 @@ func (d Daily) FetchSpecifiedDailies(fileSystem fs.FS, year, month, day int) ([]
 			continue
 		}
 
-		data, err := fs.ReadFile(fileSystem, d.Name())
+		_, err := fs.ReadFile(fileSystem, d.Name())
 		if err != nil {
 			return nil, err
 		}
-		filtered = append(filtered, Daily{Path: d.Name(), Data: data})
+		filtered = append(filtered, Daily{Path: d.Name()})
 	}
 	return filtered, nil
 }

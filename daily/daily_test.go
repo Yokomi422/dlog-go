@@ -10,10 +10,10 @@ import (
 func TestFetchSpecifiedDailies(t *testing.T) {
 	dailies := daily.Daily{}
 	vfs := fstest.MapFS{
-		"2024-01-01.md": {Data: []byte("test")},
-		"2024-01-02.md": {Data: []byte("test")},
-		"2025-01-03.md": {Data: []byte("test")},
-		"2024-03-04.md": {Data: []byte("test")},
+		"2024-01-01.md": {},
+		"2024-01-02.md": {},
+		"2025-01-03.md": {},
+		"2024-03-04.md": {},
 	}
 	t.Run("Filter by year and month", func(t *testing.T) {
 		fetchedDailies, err := dailies.FetchSpecifiedDailies(vfs, 2024, 3, -1)
@@ -21,7 +21,7 @@ func TestFetchSpecifiedDailies(t *testing.T) {
 			t.Fatal(err)
 		}
 		expected := []daily.Daily{
-			{Path: "2024-03-04.md", Data: []byte("test")},
+			{Path: "2024-03-04.md"},
 		}
 		assertFilteredDailies(t, fetchedDailies, expected)
 	})
