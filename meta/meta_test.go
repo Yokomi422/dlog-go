@@ -3,6 +3,7 @@ package meta_test
 import (
 	"github.com/Yokomi422/dlog-go/meta"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -11,7 +12,7 @@ func TestParseMetadata(t *testing.T) {
 Description: description`
 
 	metadata := meta.Metadata{}
-	got, err := metadata.ParseMetadata(body)
+	got, err := metadata.ParseMetadata(strings.NewReader(body))
 	if err != nil {
 		t.Fatal(err)
 	}
