@@ -26,9 +26,7 @@ func TestDaily(t *testing.T) {
 			daily.Daily{Path: "2024-01-02.md", Data: []byte("test")},
 			daily.Daily{Path: "2024-03-04.md", Data: []byte("test")},
 		}
-		if !reflect.DeepEqual(fetchedDailies, expected) {
-			t.Errorf("got %v, want %v", fetchedDailies, expected)
-		}
+		assertFilteredDailies(t, fetchedDailies, expected)
 	})
 	t.Run("Filter by year and month", func(t *testing.T) {
 		fetchedDailies, err := dailies.Filter(vfs, 2024, 3)
@@ -38,8 +36,14 @@ func TestDaily(t *testing.T) {
 		expected := []daily.Daily{
 			daily.Daily{Path: "2024-03-04.md", Data: []byte("test")},
 		}
-		if !reflect.DeepEqual(fetchedDailies, expected) {
-			t.Errorf("got %v, want %v", fetchedDailies, expected)
-		}
+		assertFilteredDailies(t, fetchedDailies, expected)
 	})
+}
+
+// TODO:refactoring replace reflect.DeepEqual with slices.Equal
+func assertFilteredDailies(t *testing.T, filtered []daily.Daily, expected []daily.Daily) {
+	t.Helper()
+	if !reflect.DeepEqual(filtered, expected) {
+		t.Errorf("got %v, want %v", filtered, expected)
+	}
 }

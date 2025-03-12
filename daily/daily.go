@@ -3,8 +3,8 @@ package daily
 import (
 	"fmt"
 	"io/fs"
+	"regexp"
 	"strconv"
-	"strings"
 	"time"
 )
 
@@ -24,13 +24,36 @@ func (d Daily) Filter(fileSystem fs.FS, year, month int) ([]Daily, error) {
 	if err != nil {
 		return nil, err
 	}
+	r, err := regexp.Compile("(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2}).md")
+	if err != nil {
+		return nil, err
+	}
+	// pattern generate
+	if year == -1 && month == -1 {
+		r, err = regexp.Compile("(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2}).md")
+		if err != nil {
+			return nil, err
+		}
+	} else if year == -1 {
+		r, err = regexp.Compile("(?P<year>[0-9]{4})-" + fmt.Sprintf("%02d", month) + "-[0-9]{2}.md")
+		if err != nil {
+			return nil, err
+		}
+	} else if month == -1 {
+		r, err = regexp.Compile(strconv.Itoa(year) + "-[0-9]{2}-[0-9]{2}.md")
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		r, err = regexp.Compile(strconv.Itoa(year) + "-" + fmt.Sprintf("%02d", month) + "-[0-9]{2}.md")
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	for _, d := range dailies {
-		if !strings.HasPrefix(d.Name(), strconv.Itoa(year)) {
-			continue
-		}
-		monthFormat := fmt.Sprintf("%02d", month)
-		if month != -1 && !strings.Contains(d.Name(), monthFormat) {
+		matched := r.MatchString(d.Name())
+		if !matched {
 			continue
 		}
 		data, _ := fs.ReadFile(fileSystem, d.Name())
