@@ -13,14 +13,30 @@ func TestDaily(t *testing.T) {
 		"2024-01-01.md": {Data: []byte("test")},
 		"2024-01-02.md": {Data: []byte("test")},
 		"2025-01-03.md": {Data: []byte("test")},
-		"2024-02-04.md": {Data: []byte("test")},
+		"2024-03-04.md": {Data: []byte("test")},
 	}
 	t.Run("Filter by year", func(t *testing.T) {
-		fetchedDailies := dailies.Filter(vfs, 2024)
+		fetchedDailies, err := dailies.Filter(vfs, 2024, -1)
+
+		if err != nil {
+			t.Fatal(err)
+		}
 		expected := []daily.Daily{
 			daily.Daily{Path: "2024-01-01.md", Data: []byte("test")},
 			daily.Daily{Path: "2024-01-02.md", Data: []byte("test")},
-			daily.Daily{Path: "2024-02-04.md", Data: []byte("test")},
+			daily.Daily{Path: "2024-03-04.md", Data: []byte("test")},
+		}
+		if !reflect.DeepEqual(fetchedDailies, expected) {
+			t.Errorf("got %v, want %v", fetchedDailies, expected)
+		}
+	})
+	t.Run("Filter by year and month", func(t *testing.T) {
+		fetchedDailies, err := dailies.Filter(vfs, 2024, 3)
+		if err != nil {
+			t.Fatal(err)
+		}
+		expected := []daily.Daily{
+			daily.Daily{Path: "2024-03-04.md", Data: []byte("test")},
 		}
 		if !reflect.DeepEqual(fetchedDailies, expected) {
 			t.Errorf("got %v, want %v", fetchedDailies, expected)
