@@ -3,7 +3,7 @@ package daily
 type Daily struct {
 	Path     string
 	Metadata Metadata
-	Content  Content
+	Content  Body
 }
 
 type Metadata struct {
@@ -12,6 +12,6 @@ type Metadata struct {
 	Tags        []string
 }
 
-type Content struct {
-	Body string
+type Body struct {
+	Content string
 }
